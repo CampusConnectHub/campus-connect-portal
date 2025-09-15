@@ -1,55 +1,80 @@
-# Java compiled class files
+########################################
+# 🔧 Build Artifacts (Maven & Java)
+########################################
+# Compiled class files
 *.class
 
-# Java archives
+# Maven build output
+/target/
 *.jar
 *.war
 *.ear
 *.nar
 
-# Build directories
-target/
-out/
-build/
+# Maven wrapper binary
+.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
 
-# IDE-specific files
+########################################
+# 🧠 IDE & Editor Config Files
+########################################
+# IntelliJ IDEA
 *.iml
 .idea/
-.vscode/
+
+# Eclipse
 *.project
 *.classpath
+.settings/
 
-# Logs and debug
+# VS Code
+.vscode/
+
+########################################
+# 🐞 Logs & Debug Dumps
+########################################
 *.log
 logs/
 debug/
 hs_err_pid*
 replay_pid*
 
-# Environment and database files
+########################################
+# 🔐 Environment & Local DB Files
+########################################
 .env
-*.sql
 *.db
+*.sql
 
-# Temporary and backup files
+########################################
+# 🧹 Temporary & Backup Files
+########################################
 *.tmp
 *.bak
 *.swp
 
-# OS-specific files
+########################################
+# 💻 OS-Specific Junk
+########################################
 .DS_Store
 Thumbs.db
 
-# BlueJ files (if used)
+########################################
+# 🧪 Educational Tools (if used)
+########################################
+# BlueJ
 *.ctxt
 
-# Mobile Tools for Java (J2ME)
+# J2ME Mobile Tools
 .mtj.tmp/
+
+########################################
+# 🌐 Frontend Dependencies
+########################################
+# Node.js modules
+node_modules/
 
 # Package archives
 *.zip
 *.tar.gz
 *.rar
-
-# Node modules (if frontend uses JS)
-node_modules/
