@@ -8,38 +8,44 @@ A modular, role-based Java web application designed to streamline campus communi
 
 ```
 campus-connect-portal/
-├── backend/           # Maven-based Java web app
-│   ├── pom.xml
-│   ├── .mvn/
+├── backend/
+│   ├── .mvn/                      # Maven wrapper
+│   ├── mvnw, mvnw.cmd             # Maven executables
+│   ├── pom.xml                    # Maven build config
 │   ├── src/
 │   │   └── main/
-│   │       └── webapp/
-│   │           ├── WEB-INF/
-│   │           │   └── web.xml
-│   │           └── index.jsp
-│   └── target/
-│       ├── campus-connect-portal/
-│       │   ├── META-INF/
-│       │   └── WEB-INF/
-│       │       ├── classes
-│       │       └── lib
-│       ├── maven-archiver/
-│       │   └── pom.properties
-│       └── campus-connect-portal.war
+│   │       ├── java/
+│   │       │   └── com/campusconnect/
+│   │       │       ├── admin/
+│   │       │       ├── announcement/
+│   │       │       ├── assignment/
+│   │       │       ├── attendance/
+│   │       │       ├── auth/
+│   │       │       ├── faculty/
+│   │       │       ├── notification/
+│   │       │       ├── project/
+│   │       │       ├── student/
+│   │       │       └── utils/
+│   │       └── webapp/            # JSPs, static assets
 │
+├── frontend/
+│   ├── css/                       # Stylesheets
+│   ├── js/                        # Scripts
+│   ├── assets/                   # Images, icons, fonts
+│   └── jsp/                       # JSP templates (if separate from webapp)
 │
-├── frontend/          # Static assets (CSS, JS, JSP)
-│   ├── css/
-│   ├── js/
-│   └── jsp/
-├── sql/               # Database schema and seed scripts
-├── docs/              # Screenshots, module breakdowns, setup guides
-│   ├── screenshots/
-│   ├── modules.md
-│   └── setup.md
-├── .gitignore         # Clean exclusions for build artifacts and IDE clutter
-├── LICENSE            # MIT License
-└── README.md          # You're reading it!
+├── database/
+│   ├── schema.sql                 # Table definitions
+│   └── seed.sql                   # Sample data for testing/demo
+│
+├── docs/
+│   ├── README.md                  # Project overview
+│   └── architecture.md            # Diagrams, flowcharts, module interactions
+│
+├── .idea/, .vscode/               # IDE configs
+├── .gitignore                    # Clean repo hygiene
+├── LICENSE
+└── campus-connect-portal.iml     # IntelliJ module file
 ```
 
 ---
