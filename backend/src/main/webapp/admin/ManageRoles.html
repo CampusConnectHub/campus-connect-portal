@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Manage Roles</title>
+    <link rel="stylesheet" href="../css/global.css" />
+</head>
+<body>
+<h2>Update User Roles</h2>
+<form action="updateRole" method="post">
+    <label for="userId">User ID:</label>
+    <input type="text" name="userId" id="userId" required />
+
+    <label for="newRole">New Role:</label>
+    <select name="newRole" id="newRole">
+        <option value="STUDENT">Student</option>
+        <option value="FACULTY">Faculty</option>
+        <option value="ADMIN">Admin</option>
+    </select>
+
+    <button type="submit">Update Role</button>
+</form>
+</body>
+</html>
+<link rel="stylesheet" href="../css/global.css" />
+<link rel="stylesheet" href="../css/admin.css" />

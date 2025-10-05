@@ -6,48 +6,39 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnnouncementDAO
-{
+public class AnnouncementDAO {
+    private Connection conn = DBUtil.getConnection();
 
-    public boolean postAnnouncement(Announcement announcement)
-    {
-        String query = "INSERT INTO Announcement (faculty_id, title, content, timestamp) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query))
-        {
-            stmt.setInt(1, announcement.getFacultyId());
-            stmt.setString(2, announcement.getTitle());
-            stmt.setString(3, announcement.getContent());
-            stmt.setTimestamp(4, Timestamp.valueOf(announcement.getTimestamp()));
-            return stmt.executeUpdate() > 0;
-        }
-        catch (SQLException e)
-        {
+    public void postAnnouncement(Announcement a) {
+        String sql = "INSERT INTO announcements (category, text, image_path, pdf_path) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, a.getCategory().name());
+            ps.setString(2, a.getText());
+            ps.setString(3, a.getImagePath());
+            ps.setString(4, a.getPdfPath());
+            ps.executeUpdate();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public List<Announcement> getAllAnnouncements() {
+    public List<Announcement> getAnnouncementsByCategory(AnnouncementCategory category) {
+        String sql = "SELECT * FROM announcements WHERE category = ? ORDER BY posted_on DESC";
         List<Announcement> list = new ArrayList<>();
-        String query = "SELECT * FROM Announcement ORDER BY timestamp DESC";
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery())
-        {
-            while (rs.next())
-            {
-                list.add(new Announcement(
-                        rs.getInt("id"),
-                        rs.getInt("faculty_id"),
-                        rs.getString("title"),
-                        rs.getString("content"),
-                        rs.getTimestamp("timestamp").toLocalDateTime()
-                ));
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, category.name());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Announcement a = new Announcement();
+                a.setId(rs.getInt("id"));
+                a.setCategory(AnnouncementCategory.valueOf(rs.getString("category")));
+                a.setText(rs.getString("text"));
+                a.setImagePath(rs.getString("image_path"));
+                a.setPdfPath(rs.getString("pdf_path"));
+                a.setPostedOn(rs.getTimestamp("posted_on").toLocalDateTime());
+                list.add(a);
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;

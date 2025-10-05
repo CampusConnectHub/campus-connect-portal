@@ -1,0 +1,20 @@
+.assignment-list {
+  padding: 20px;
+}
+
+.assignment-card {
+  background-color: var(--card-bg);
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
+
+.assignment-card h3 {
+  color: var(--soft-cyan);
+}
+
+form input[type="file"] {
+  margin-top: 10px;
+  color: var(--muted-gray);
+}

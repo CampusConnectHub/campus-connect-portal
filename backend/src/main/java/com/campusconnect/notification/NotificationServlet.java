@@ -1,34 +1,31 @@
 package com.campusconnect.notification;
 
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.IOException;
 
-public class NotificationServlet extends HttpServlet
-{
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
-        String title = req.getParameter("title");
+@WebServlet("/sendNotification")
+public class NotificationServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            res.sendRedirect("login.jsp");
+            return;
+        }
+
+        int senderId = (int) session.getAttribute("userId");
+        String roleTarget = req.getParameter("roleTarget");
         String message = req.getParameter("message");
-        String recipientType = req.getParameter("recipientType");
+        String urgency = req.getParameter("urgency");
 
         Notification n = new Notification();
-        n.setTitle(title);
+        n.setSenderId(senderId);
+        n.setRoleTarget(roleTarget);
         n.setMessage(message);
-        n.setRecipientType(recipientType);
-        n.setTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        n.setUrgency(urgency);
 
-        try
-        {
-            new NotificationDAO().sendNotification(n);
-            res.sendRedirect("notificationSuccess.jsp");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+        new NotificationDAO().sendNotification(n);
+        res.sendRedirect("faculty/FacultyDashboard.jsp");
     }
 }

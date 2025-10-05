@@ -1,54 +1,23 @@
 package com.campusconnect.admin;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+@WebServlet("/admin")
+public class AdminServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        AdminDAO dao = new AdminDAO();
+        List<User> users = dao.getAllUsers();
+        Map<String, Integer> stats = dao.getSystemStats();
 
-import java.io.IOException;
-
-public class AdminServlet extends HttpServlet
-{
-    private AdminDAO adminDAO;
-
-    @Override
-    public void init()
-    {
-        adminDAO = new AdminDAO();
+        req.setAttribute("users", users);
+        req.setAttribute("stats", stats);
+        req.getRequestDispatcher("AdminDashboard.jsp").forward(req, res);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        String action = request.getParameter("action");
-
-        switch (action)
-        {
-            case "createSection":
-                createSection(request, response);
-                break;
-            case "assignMentor":
-                assignMentor(request, response);
-                break;
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        String action = req.getParameter("action");
+        if ("approve".equals(action)) {
+            int userId = Integer.parseInt(req.getParameter("userId"));
+            new AdminDAO().approveUser(userId);
         }
-    }
-
-    private void createSection(HttpServletRequest request, HttpServletResponse response)
-            throws IOException
-    {
-        String sectionName = request.getParameter("sectionName");
-        adminDAO.createSection(new Section(sectionName));
-        response.sendRedirect("adminPanel.jsp");
-    }
-
-    private void assignMentor(HttpServletRequest request, HttpServletResponse response)
-            throws IOException
-    {
-        int studentId = Integer.parseInt(request.getParameter("studentId"));
-        int facultyId = Integer.parseInt(request.getParameter("facultyId"));
-        adminDAO.assignMentor(new MentorAssignment(studentId, facultyId));
-        response.sendRedirect("adminPanel.jsp");
+        res.sendRedirect("admin");
     }
 }

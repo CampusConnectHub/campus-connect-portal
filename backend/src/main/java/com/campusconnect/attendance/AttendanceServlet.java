@@ -1,31 +1,35 @@
 package com.campusconnect.attendance;
 
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import java.io.*;
+import java.io.IOException;
+import java.time.LocalDate;
 
-public class AttendanceServlet extends HttpServlet
-{
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
-        int studentId = Integer.parseInt(req.getParameter("studentId"));
-        String date = req.getParameter("date");
-        boolean present = Boolean.parseBoolean(req.getParameter("present"));
-
-        Attendance a = new Attendance();
-        a.setStudentId(studentId);
-        a.setDate(date);
-        a.setPresent(present);
-
-        try
-        {
-            new AttendanceDAO().markAttendance(a);
-            res.sendRedirect("attendanceSuccess.jsp");
+@WebServlet("/markAttendance")
+public class AttendanceServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            res.sendRedirect("login.jsp");
+            return;
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+        int facultyId = (int) session.getAttribute("userId");
+        String[] studentIds = req.getParameterValues("studentId");
+        String[] statuses = req.getParameterValues("status");
+        LocalDate date = LocalDate.parse(req.getParameter("date"));
+
+        AttendanceDAO dao = new AttendanceDAO();
+        for (int i = 0; i < studentIds.length; i++) {
+            Attendance a = new Attendance();
+            a.setStudentId(Integer.parseInt(studentIds[i]));
+            a.setDate(date);
+            a.setStatus(statuses[i]);
+            a.setMarkedBy(facultyId);
+            dao.markAttendance(a);
         }
+
+        res.sendRedirect("faculty/dashboard.jsp");
     }
 }

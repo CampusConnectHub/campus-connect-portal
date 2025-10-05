@@ -1,44 +1,15 @@
 package com.campusconnect.attendance;
 
-public class Attendance
-{
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+public class Attendance {
     private int id;
     private int studentId;
-    private String date;
-    private boolean present;
+    private LocalDate date;
+    private String status;
+    private int markedBy;
+    private LocalDateTime markedOn;
 
-    public int getId()
-    {
-        return id;
-    }
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-    public int getStudentId()
-    {
-        return studentId;
-    }
-    public void setStudentId(int studentId)
-    {
-        this.studentId = studentId;
-    }
-
-    public String getDate()
-    {
-        return date;
-    }
-    public void setDate(String date)
-    {
-        this.date = date;
-    }
-
-    public boolean isPresent()
-    {
-        return present;
-    }
-    public void setPresent(boolean present)
-    {
-        this.present = present;
-    }
+    // Getters and setters
 }

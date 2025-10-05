@@ -1,32 +1,23 @@
-package com.campusconnect.utils;
-
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 
-public class DBUtil
-{
-    private static final HikariDataSource dataSource;
+public class DBUtil {
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource ds;
 
-    static
-    {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/campusconnect");
+    static {
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/campusdb");
         config.setUsername("root");
         config.setPassword("your_password");
         config.setMaximumPoolSize(10);
         config.setMinimumIdle(2);
+        config.setIdleTimeout(30000);
         config.setConnectionTimeout(30000);
-        config.setIdleTimeout(600000);
-        config.setMaxLifetime(1800000);
         config.setLeakDetectionThreshold(2000);
-
-        dataSource = new HikariDataSource(config);
+        ds = new HikariDataSource(config);
     }
 
-    public static Connection getConnection() throws SQLException
-    {
-        return dataSource.getConnection();
+    public static Connection getConnection() {
+        return ds.getConnection();
     }
 }

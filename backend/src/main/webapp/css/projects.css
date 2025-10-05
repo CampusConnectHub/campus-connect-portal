@@ -1,0 +1,21 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  max-width: 500px;
+  margin: auto;
+}
+
+label, select, input {
+  color: var(--text-light);
+}
+
+select, input[type="file"] {
+  background-color: var(--hover-bg);
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+}

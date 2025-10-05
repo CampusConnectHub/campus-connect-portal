@@ -6,37 +6,37 @@ import jakarta.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/announcement")
-public class AnnouncementServlet extends HttpServlet
-{
-    private AnnouncementDAO announcementDAO;
+@WebServlet("/postAnnouncement")
+@MultipartConfig
+public class AnnouncementServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        String category = req.getParameter("category");
+        String text = req.getParameter("text");
 
-    @Override
-    public void init()
-    {
-        announcementDAO = new AnnouncementDAO();
-    }
+        Part imagePart = req.getPart("image");
+        Part pdfPart = req.getPart("pdf");
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        int facultyId = Integer.parseInt(request.getParameter("facultyId"));
-        String title = request.getParameter("title");
-        String content = request.getParameter("content");
+        String imagePath = null, pdfPath = null;
 
-        Announcement announcement = new Announcement(facultyId, title, content);
-        boolean success = announcementDAO.postAnnouncement(announcement);
+        if (imagePart != null && imagePart.getSize() > 0) {
+            String imageName = Paths.get(imagePart.getSubmittedFileName()).getFileName().toString();
+            imagePath = "uploads/images/" + imageName;
+            imagePart.write(imagePath);
+        }
 
-        response.sendRedirect(success ? "facultyDashboard.jsp" : "error.jsp");
-    }
+        if (pdfPart != null && pdfPart.getSize() > 0) {
+            String pdfName = Paths.get(pdfPart.getSubmittedFileName()).getFileName().toString();
+            pdfPath = "uploads/pdfs/" + pdfName;
+            pdfPart.write(pdfPath);
+        }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        List<Announcement> announcements = announcementDAO.getAllAnnouncements();
-        request.setAttribute("announcements", announcements);
-        request.getRequestDispatcher("announcement.jsp").forward(request, response);
+        Announcement a = new Announcement();
+        a.setCategory(AnnouncementCategory.valueOf(category));
+        a.setText(text);
+        a.setImagePath(imagePath);
+        a.setPdfPath(pdfPath);
+
+        new AnnouncementDAO().postAnnouncement(a);
+        res.sendRedirect("admin");
     }
 }

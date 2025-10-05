@@ -1,33 +1,37 @@
 package com.campusconnect.assignment;
 
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.*;
 import java.io.*;
-import java.sql.Timestamp;
+import java.nio.file.*;
 
-public class SubmissionServlet extends HttpServlet
-{
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
+@WebServlet("/submitAssignment")
+@MultipartConfig
+public class SubmissionServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            res.sendRedirect("login.jsp");
+            return;
+        }
+
         int assignmentId = Integer.parseInt(req.getParameter("assignmentId"));
-        String studentId = req.getParameter("studentId");
-        String filename = req.getParameter("filename");
+        int studentId = (int) session.getAttribute("userId");
 
-        AssignmentSubmission sub = new AssignmentSubmission();
-        sub.setAssignmentId(assignmentId);
-        sub.setStudentId(studentId);
-        sub.setFilename(filename);
-        sub.setSubmittedOn(new Timestamp(System.currentTimeMillis()));
+        Part filePart = req.getPart("file");
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        String uploadDir = getServletContext().getRealPath("/uploads/assignments/");
+        Files.createDirectories(Paths.get(uploadDir));
+        String filePath = uploadDir + File.separator + fileName;
+        filePart.write(filePath);
 
-        try
-        {
-            new SubmissionDAO().submitAssignment(sub);
-            res.sendRedirect("submissionSuccess.jsp");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+        AssignmentSubmission s = new AssignmentSubmission();
+        s.setAssignmentId(assignmentId);
+        s.setStudentId(studentId);
+        s.setFilePath("uploads/assignments/" + fileName);
+
+        new SubmissionDAO().submitAssignment(s);
+        res.sendRedirect("student/dashboard.jsp");
     }
 }

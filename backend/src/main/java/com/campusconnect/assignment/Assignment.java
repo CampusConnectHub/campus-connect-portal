@@ -1,51 +1,15 @@
 package com.campusconnect.assignment;
 
-public class Assignment
-{
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+public class Assignment {
     private int id;
     private String title;
     private String description;
-    private String deadline;
-    private int courseId;
+    private LocalDate dueDate;
+    private int createdBy;
+    private LocalDateTime createdOn;
 
-    public int getId()
-    {
-        return id;
-    }
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-    public String getTitle()
-    {
-        return title;
-    }
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-    public String getDescription()
-    {
-        return description;
-    }
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-    public String getDeadline()
-    {
-        return deadline;
-    }
-    public void setDeadline(String deadline)
-    {
-        this.deadline = deadline;
-    }
-    public int getCourseId()
-    {
-        return courseId;
-    }
-    public void setCourseId(int courseId)
-    {
-        this.courseId = courseId;
-    }
+    // Getters and setters
 }

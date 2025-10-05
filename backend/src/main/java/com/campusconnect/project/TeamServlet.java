@@ -1,31 +1,25 @@
-package com.campusconnect.project;
-
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import java.io.*;
-
-public class TeamServlet extends HttpServlet
-{
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
-    {
+@WebServlet("/createTeam")
+public class TeamServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        int creatorId = (int) req.getSession().getAttribute("userId");
         String teamName = req.getParameter("teamName");
-        int projectId = Integer.parseInt(req.getParameter("projectId"));
-        String members = req.getParameter("members"); // comma-separated
+        String[] memberIds = req.getParameterValues("memberIds");
 
-        Team team = new Team();
-        team.setTeamName(teamName);
-        team.setProjectId(projectId);
-        team.setMembers(members);
+        Team t = new Team();
+        t.setTeamName(teamName);
+        t.setCreatedBy(creatorId);
 
-        try
-        {
-            new ProjectDAO().registerTeam(team);
-            res.sendRedirect("teamSuccess.jsp");
+        TeamDAO dao = new TeamDAO();
+        int teamId = dao.createTeam(t);
+
+        for (String memberId : memberIds) {
+            TeamMember tm = new TeamMember();
+            tm.setTeamId(teamId);
+            tm.setStudentId(Integer.parseInt(memberId));
+            tm.setRole("Member");
+            dao.addTeamMember(tm);
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+
+        res.sendRedirect("student/StudentDashboard.jsp");
     }
 }

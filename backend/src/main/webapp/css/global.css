@@ -1,0 +1,38 @@
+:root {
+  --deep-indigo: #1e1b3a;
+  --soft-cyan: #7fdde9;
+  --muted-gray: #d3d3d3;
+  --card-bg: #2a264d;
+  --text-light: #f0f0f0;
+  --accent: #00c2cb;
+  --hover-bg: #3a3360;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--deep-indigo);
+  color: var(--text-light);
+}
+
+h1, h2 {
+  color: var(--soft-cyan);
+}
+
+a {
+  color: var(--soft-cyan);
+  text-decoration: none;
+}
+
+button {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #00a2ab;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | CampusConnectHub</title>
+    <link rel="stylesheet" href="../css/global.css" />
+</head>
+<body>
+<div class="login-container">
+    <h2>CampusConnectHub Login</h2>
+    <form action="login" method="post" class="login-form">
+        <label for="userId">User ID</label>
+        <input type="text" id="userId" name="userId" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+
+        <label for="role">Role</label>
+        <select name="role" id="role" required>
+            <option value="STUDENT">Student</option>
+            <option value="FACULTY">Faculty</option>
+            <option value="ADMIN">Admin</option>
+        </select>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="login-error">
+        <!-- This will be populated dynamically if login fails -->
+        <p style="color: red;">${error}</p>
+    </div>
+</div>
+</body>
+</html>
+<link rel="stylesheet" href="../css/global.css" />

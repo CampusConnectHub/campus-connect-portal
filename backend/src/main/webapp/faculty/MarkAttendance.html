@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mark Attendance</title>
+</head>
+<body>
+<h2>Mark Attendance</h2>
+<form action="markAttendance" method="post">
+    <input type="date" name="date" required />
+    <div class="student-list">
+        <!-- Repeat for each student -->
+        <div>
+            <label>Zaheer</label>
+            <select name="status_1001">
+                <option value="PRESENT">Present</option>
+                <option value="ABSENT">Absent</option>
+                <option value="LEAVE">Leave</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>
+<link rel="stylesheet" href="../css/global.css" />
+<link rel="stylesheet" href="../css/attendance.css" />

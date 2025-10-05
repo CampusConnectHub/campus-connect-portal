@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assign Project</title>
+</head>
+<body>
+<h2>Assign Project</h2>
+<form action="assignProject" method="post">
+    <input type="text" name="title" placeholder="Project Title" required />
+    <textarea name="description" placeholder="Description" required></textarea>
+    <select name="teamId">
+        <option value="1">Team Alpha</option>
+        <option value="2">Team Beta</option>
+    </select>
+    <input type="date" name="dueDate" required />
+    <button type="submit">Assign</button>
+</form>
+</body>
+</html>
+<link rel="stylesheet" href="../css/global.css" />
+<link rel="stylesheet" href="../css/projects.css" />

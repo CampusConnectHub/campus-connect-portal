@@ -1,55 +1,40 @@
-package com.campusconnect.project;
+public class ProjectDAO {
+    private Connection conn = DBUtil.getConnection();
 
-import com.campusconnect.utils.DBUtil;
-import java.sql.*;
-import java.util.*;
-
-public class ProjectDAO
-{
-    public void createProject(String title, String description) throws Exception
-    {
-        Connection conn = DBUtil.getConnection();
-        PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO projects (title, description) VALUES (?, ?)"
-        );
-        ps.setString(1, title);
-        ps.setString(2, description);
-        ps.executeUpdate();
-        conn.close();
-    }
-
-    public void registerTeam(Team team) throws Exception
-    {
-        Connection conn = DBUtil.getConnection();
-        PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO teams (team_name, project_id, members) VALUES (?, ?, ?)"
-        );
-        ps.setString(1, team.getTeamName());
-        ps.setInt(2, team.getProjectId());
-        ps.setString(3, team.getMembers());
-        ps.executeUpdate();
-        conn.close();
-    }
-
-    public List<Team> getTeamsByProject(int projectId) throws Exception
-    {
-        List<Team> list = new ArrayList<>();
-        Connection conn = DBUtil.getConnection();
-        PreparedStatement ps = conn.prepareStatement(
-                "SELECT * FROM teams WHERE project_id = ?"
-        );
-        ps.setInt(1, projectId);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next())
-        {
-            Team t = new Team();
-            t.setId(rs.getInt("id"));
-            t.setTeamName(rs.getString("team_name"));
-            t.setProjectId(rs.getInt("project_id"));
-            t.setMembers(rs.getString("members"));
-            list.add(t);
+    public void assignProject(Project p) {
+        String sql = "INSERT INTO projects (title, description, assigned_by, team_id, due_date) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getTitle());
+            ps.setString(2, p.getDescription());
+            ps.setInt(3, p.getAssignedBy());
+            ps.setInt(4, p.getTeamId());
+            ps.setDate(5, Date.valueOf(p.getDueDate()));
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        conn.close();
-        return list;
+    }
+
+    public void submitProject(ProjectSubmission s) {
+        String sql = "INSERT INTO project_submissions (project_id, team_id, file_path, submitted_on, status) VALUES (?, ?, ?, NOW(), 'SUBMITTED')";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, s.getProjectId());
+            ps.setInt(2, s.getTeamId());
+            ps.setString(3, s.getFilePath());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void approveProject(int submissionId, String feedback) {
+        String sql = "UPDATE project_submissions SET status = 'APPROVED', feedback = ? WHERE submission_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, feedback);
+            ps.setInt(2, submissionId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
